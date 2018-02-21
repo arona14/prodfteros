@@ -1,0 +1,14 @@
+﻿################################################################################
+# Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
+################################################################################
+
+/Fteros/crm/api/__pycache__
+/Fteros/crm/migrations/__pycache__
+/Fteros/crm/__pycache__
+/Fteros/Fteros/__pycache__
+/Fteros/gds/api/__pycache__
+/Fteros/gds/migrations/__pycache__
+/Fteros/gds/__pycache__
+/Fteros/util/api/__pycache__
+/Fteros/util/migrations/__pycache__
+/Fteros/util/__pycache__
