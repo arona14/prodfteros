@@ -92,7 +92,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'crmcts',
         'USER': 'postgres',
-        'PASSWORD': 'Pass1234',  #'88Islam19'
+        'PASSWORD': '88Islam19',  #'88Islam19'
         'HOST': 'localhost',
         'PORT': '',
     }
