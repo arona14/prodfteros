@@ -175,7 +175,7 @@ class RewardRudView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = RewardPostSerializer
 
     def get_queryset(self):
-        return Reward.objects.all
+        return Reward.objects.all()
 
 class DropnetAPIView(mixins.CreateModelMixin, generics.ListAPIView):
     lookup_field = 'id'
@@ -197,11 +197,11 @@ class DropnetAPIView(mixins.CreateModelMixin, generics.ListAPIView):
         return self.create(request, *args, **kwargs)
 
 class DropnetRudView(generics.RetrieveUpdateDestroyAPIView):
-        lookup_field = 'id' 
-        serializer_class = DropnetPostSerializer
+    lookup_field = 'id' 
+    serializer_class = DropnetPostSerializer
 
-        def get_queryset(self):
-            return Dropnet.objects.all
+    def get_queryset(self):
+        return Dropnet.objects.all()
 
 class UserCreateAPIView(generics.CreateAPIView):
 
