@@ -28,7 +28,7 @@ class ExceptionAirlineSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'airline',
-            'contract',
+            'markup',
             'aircode',
             'net_value',
             'pub_value',
