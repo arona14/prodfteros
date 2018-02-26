@@ -65,6 +65,9 @@ class Customer(BaseEnity):
     country = models.CharField(max_length=50, null = True, blank = True)
     zip_code = models.CharField(max_length=20, null = True, blank = True)
     customer_type = models.CharField(max_length=5,choices= CUSTOMER_TYPES)
+    email = models.EmailField(null = True, blank = True)
+    phone = models.CharField(max_length=25,null = True, blank = True)
+    fax = models.CharField(max_length=25,null = True, blank = True)
     group = models.ForeignKey(Affiliate, related_name='group', on_delete=models.CASCADE)
     
     
