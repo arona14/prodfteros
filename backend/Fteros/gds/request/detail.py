@@ -2,7 +2,7 @@ import time
 import os
 from os import chdir
 import pandas as pd
-from reservation import Itinerary
+from .reservation import Itinerary
 
 
 class Segment():
