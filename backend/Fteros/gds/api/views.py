@@ -3,6 +3,9 @@ from rest_framework import generics, mixins
 from gds.api.serializers import SchedChangeSerializer, PassengerSerializer, ReservationSerializer,SegmentSerializer
 from gds.models import SchedChange, Passenger, Reservation
 from gds.request.detail import Segment
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.http import Http404
 
 
 # this view allow only read methods
