@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\crm",
+    "\\crm\\api",
+    "\\Fteros"
   ],
+  "SelectedNode": "\\crm\\api\\serializers.py",
   "PreviewInSolutionExplorer": false
 }
