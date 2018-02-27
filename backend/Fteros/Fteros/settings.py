@@ -150,11 +150,11 @@ REST_FRAMEWORK = {
     ),
 }
 
-"""JWT_AUTH = { 
+JWT_AUTH = { 
     'JWT_AUTH_HEADER_PREFIX': 'Bearer',
     # this is the maximum time AFTER the token was issued that
     # it can be refreshed.  exprired tokens can't be refreshed.
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
-}"""
+}
 
 CORS_ORIGIN_ALLOW_ALL = True
