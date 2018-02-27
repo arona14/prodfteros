@@ -11,7 +11,7 @@ class SchedChange(models.Model):
     is_ticket = models.BooleanField(default = False)
     booking_pcc = models.CharField(max_length=50,blank=True,null=True)
     booking_agent = models.CharField(max_length=50,blank=True,null=True)
-
+    file_name = models.CharField(max_length=50,blank=True,null=True)
 
 class Passenger(models.Model):
 

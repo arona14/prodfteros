@@ -20,3 +20,6 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = '__all__'
+
+class SegmentSerializer(serializers.Serializer):
+    name_file = serializers.CharField(max_length=50)

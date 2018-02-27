@@ -1,7 +1,8 @@
 from django.db.models import Q
 from rest_framework import generics, mixins
-from gds.api.serializers import SchedChangeSerializer, PassengerSerializer, ReservationSerializer
+from gds.api.serializers import SchedChangeSerializer, PassengerSerializer, ReservationSerializer,SegmentSerializer
 from gds.models import SchedChange, Passenger, Reservation
+from gds.request.detail import Segment
 
 
 # this view allow only read methods
@@ -49,3 +50,14 @@ class ReservationAPIView(generics.ListAPIView):
                 ).distinct()
 
         return qs
+
+class SegmentView(APIView):
+
+    def get(self, request, format=None):
+
+        file_name = request.query_params.get('name_file', None)
+        if file_name is not None:
+            resul = Segment().get_segment(file_name)
+            return Response(resul)
+        else:
+            raise exceptions.ValidationError({'file_name': [_('This field is required')]})

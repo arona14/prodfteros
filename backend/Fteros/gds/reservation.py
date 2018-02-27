@@ -34,9 +34,9 @@ class Itinerary(object):
 				a1 = node['tir38:MarketingAirline'].get_xml_attr('Code')
 				airline.append(str(a1))	
 		except:
-			airline = ['N/A']
+			return None
 	
-		return 
+		return airline
 		
 	def carrier_list(self, data):
 		""" Retrieve a list which contains all airlines for each segment"""
