@@ -3,7 +3,7 @@ import pandas as pd
 import jxmlease
 import datetime
 import re
-
+from datetime import date, timedelta, datetime,time
 
 
 ####################################### Itinerary class ##################################
@@ -24,7 +24,6 @@ class Itinerary(object):
 	
 		return status_code
 	
-
 	def airline_list(self, data):
 		""" Retrieve a list which contains all airlines for each segment"""
 		
@@ -34,7 +33,7 @@ class Itinerary(object):
 				a1 = node['tir38:MarketingAirline'].get_xml_attr('Code')
 				airline.append(str(a1))	
 		except:
-			return None
+			airline = ['N/A']
 	
 		return airline
 		
@@ -51,12 +50,10 @@ class Itinerary(object):
 	
 		return carrier
 
-
 	def origin_city_list(self, data):
 		""" Retrieve a list which contains origines
 			city list for each segment """
 
-		
 		origin_location = []
 		try:
 			for path, _, node in jxmlease.parse(data, generator="tir38:TravelItinerary/tir38:ItineraryInfo/tir38:ReservationItems/tir38:Item/tir38:FlightSegment"):
@@ -66,7 +63,6 @@ class Itinerary(object):
 			origin_location = ["N/A"]
 
 		return origin_location 
-
 
 	def destination_city_list(self, data) :
 		""" Retrieve a list which contains destination city
@@ -83,7 +79,6 @@ class Itinerary(object):
 			destination_location = ["N/A"]
 		
 		return destination_location 
-
 
 	def flight_number_list(self, data):
 		""" This methode retrieve a list wich combers 
@@ -113,7 +108,6 @@ class Itinerary(object):
 			
 		return class_of_service
 
-
 	def flight_duration_list(self, data):
 		""" This method retrieve a list which contains flight duration """
 
@@ -130,15 +124,16 @@ class Itinerary(object):
 	def departure_datetime_list(self, data):
 		""" Return list wich contains departure datetime """
 
+
 		departure_datetime = []
 		try:
 			for path, _, node in jxmlease.parse(data, generator="tir38:TravelItinerary/tir38:ItineraryInfo/tir38:ReservationItems/tir38:Item/tir38:FlightSegment"):
 				departure_datetime1 = node.get_xml_attr('DepartureDateTime')
+				departure_datetime1 = departure_datetime1.replace('T',' ')
 				departure_datetime.append(str(departure_datetime1))
 		except:
 			departure_datetime = ['N/A']
 		return departure_datetime
-
 
 	def arrival_datetime_list(self, data):
 		""" Retrieve list wich contains arrival datetimes """
@@ -152,7 +147,6 @@ class Itinerary(object):
 			datetime = ['N/A']
 		return datetime
 	
-
 	def updated_depature_datetime(self, data):
 		""" Retrieve list wich contains updated depature datetimes """
 
@@ -176,7 +170,6 @@ class Itinerary(object):
 			pnr = ['N/A']
 		return pnr
 	
-
 	def miscsegment_list(self, data):
 		""" Retrieve list which contains all messages text
 			from  MiscSegment """ 
@@ -240,6 +233,24 @@ class Itinerary(object):
 		except:
 			frequent = ['N/A']
 		return frequent
+
+	def bookingPcc(self, data):
+		
+		try:
+			root = jxmlease.parse(data)
+			booking_pcc= root['soap-env:Envelope']['soap-env:Body']['tir38:TravelItineraryReadRS']['tir38:TravelItinerary']['tir38:ItineraryRef']['tir38:Source'].get_xml_attr('HomePseudoCityCode')
+		except:
+			booking_pcc = 'empty'
+		return booking_pcc
+	
+	def bookingAgent(self, data):
+		
+		try:
+			root = jxmlease.parse(data)
+			booking_agent= root['soap-env:Envelope']['soap-env:Body']['tir38:TravelItineraryReadRS']['tir38:TravelItinerary']['tir38:ItineraryRef']['tir38:Source'].get_xml_attr('CreationAgent')
+		except:
+			booking_agent = 'empty'
+		return booking_agent
 	
 ################################### Passenger class ####################################
 
@@ -304,20 +315,51 @@ class Passenger(object):
 		""" this method retrieve the list of passengers's date of birth """
 
 		birth_day = []
+
 		try:
+			
 			for path, _, node in jxmlease.parse(data, generator="tir38:TravelItinerary/tir38:SpecialServiceInfo/tir38:Service"):
-				if node.get_xml_attr('SSR_Type') == "DOCS":
-					bd = str(node['tir38:Text'])
-					#string = bd.split('/')
-					#dob_list.append(string[5])
-					birth = re.search(r"[0-9]{2}[A-Z]{3}[0-9]{4}",bd,flags=0).group()
-					birth_day.append(birth)
-				
+				changed= node.get_xml_attr('SSR_Type',None) is not None
+				if changed==False:
+					pass
+				elif changed==True:
+					if node.get_xml_attr('SSR_Type') == "DOCS":
+						bd = str(node['tir38:Text'])
+						birth = re.search(r"[0-9]{2}[A-Z]{3}[0-9]+",bd,flags=0).group(0)
+						day = birth[0:2]
+						month = birth[2:5]
+						year = birth[5:9]
+						if month == 'JAN':
+							month = '01'
+						elif month == 'FEB':
+							month = '02'
+						elif month == 'MAR':
+							month = '03'
+						elif month == 'APR':
+							month = '04'
+						elif month == 'MAY':
+							month = '05'
+						elif month == 'JUN':
+							month = '06'
+						elif month == 'JUL':
+							month = '07'
+						elif month =='AUG':
+							month = '08'
+						elif month == 'SEP':
+							month = '09'
+						elif month == 'OCT':
+							month = '10'
+						elif month== 'NOV':
+							month = '11'
+						elif month =='DEC':
+							month = '12'
+						datetime_object = datetime.strptime(year+'-'+month+'-'+day,"%Y-%m-%d").strftime('%Y-%m-%d')
+
+						birth_day.append(datetime_object)
 		except:
 			birth_day = ['N/A']
-
 		return birth_day
-
+			
 	def email_list(self, data):
 		""" this method retrieve the list of passengers's date of birth """
 		try:
@@ -340,10 +382,16 @@ class Passenger(object):
 			phone = []
 
 			for path, _, node in jxmlease.parse(data, generator="tir38:TravelItinerary/tir38:SpecialServiceInfo/tir38:Service"):
-				if node.get_xml_attr('SSR_Type') == "CTCM":
-					bd = str(node['tir38:Text'])
-					phone1 = re.search(r'[0-9]{5,}',bd).group(0)
-					phone.append(phone1)
+				value= node.get_xml_attr('SSR_Type',None) is not None
+				if value==False:
+					pass
+				else:
+
+					if node.get_xml_attr('SSR_Type') == "CTCM":
+						bd = str(node['tir38:Text'])
+						phone1 = re.search(r'[0-9]{5,}',bd).group(0)
+						phone.append(phone1)
+						phone = list(set(phone))
 		except:
 			phone = ['N/A']
 				
@@ -554,10 +602,8 @@ class Rules():
 
 class Ticketing():
 
-
 	def is_ticketed(self, data):
 		""" Return true if reservation is ticketed false else """
-		print 1
 		ticket_number_list = []
 		try:
 			for path, _, node in jxmlease.parse(data, generator="tir38:TravelItinerary/tir38:ItineraryInfo/tir38:Ticketing"):
@@ -600,12 +646,11 @@ class Ticketing():
 				ticket_number = node.get_xml_attr('eTicketNumber',"")
 				ticket_number_list.append(str(ticket_number))
 			for i in ticket_number_list:
-				if i=='':
+				if i=='' or 'TV' in i or 'TK' in i : 
 					pass
 				else:
-
+					
 					tkt_numbers = re.search(r"(TE)[ ][0-9]+",i,flags=0).group(0)
-
 					tkt_number = re.search(r'[0-9]+',tkt_numbers,flags=0).group()
 					tkt_number_list.append(tkt_number)
 		except:
@@ -620,6 +665,7 @@ class Ticketing():
 		try:
 			root = jxmlease.parse(data)
 			creat_date = root['soap-env:Envelope']['soap-env:Body']['tir38:TravelItineraryReadRS']['tir38:TravelItinerary']['tir38:ItineraryRef']['tir38:Source'].get_xml_attr('CreateDateTime')	
+			creat_date = creat_date.replace('T',' ')
 		except:
 			creat_date = 'NA'
 		return creat_date
@@ -670,21 +716,23 @@ class Ticketing():
 			return 'empty'
 				
 	def issue_date(self, data):
-		ticket_agent_list = []
-		tkt_agent_list = []
+		 
+		date_list = []
+		date_time = []
 		for path, _, node in jxmlease.parse(data, generator="tir38:TravelItinerary/tir38:ItineraryInfo/tir38:Ticketing"):
-			tkt_agent_list1 = node.get_xml_attr('eTicketNumber',"")
-			tkt_agent_list.append(str(tkt_agent_list1))
-			print(tkt_agent_list)
-		for i in tkt_agent_list:
-			if i=='':
+			date_list1 = node.get_xml_attr('eTicketNumber',"")
+			date_list.append(str(date_list1))
+		for i in date_list:
+			if i=='' or 'TV' in i or 'TK' in i :
 				pass
 			else:
-				tkt_agent = re.search(r"([0-9](/)[A-Z0-9_]+",i,flags=0).group(0)
-				print(tkt_agent)
-		#return ticket_agent_list
-	
-		
+				value =  i.split('/')
+				heure = value[-2].split(' ')
+				#heure = re.search(r"([0-9]+",value[-2],flags=0).group(0)
+				time = value[-1]+' '+heure[-1][0:2]+'H'+heure[-1][2:4]
+				date_time.append(time)
+				
+		return date_time
 	
 	def is_refund(self):
 
