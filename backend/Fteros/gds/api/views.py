@@ -61,6 +61,7 @@ class SegmentView(APIView):
         file_name = request.query_params.get('name_file', None)
         if file_name is not None:
             resul = Segment().get_segment(file_name)
-            return Response(resul)
         else:
-            raise exceptions.ValidationError({'file_name': [_('This field is required')]})
+            #raise exceptions.ValidationError({'file_name': [_('This field is required')]})
+            resul = 'This field is required'
+        return Response(resul)
